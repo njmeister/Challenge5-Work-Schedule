@@ -1,29 +1,16 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
 $(document).ready(
 
-
-
 $(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
 
+//get values from dayjs
 let today = dayjs().format('dddd, MMMM DD');
 let thisHour = dayjs().hour();
 
-console.log('something')
-
-console.log(today);
-console.log(thisHour);
-
+//add current day display
 let todayDisplay = document.getElementById('currentDay');
 todayDisplay.innerHTML = today
 
+//define the sections for the hour slots
 let hour9 = document.getElementById('hour-9');
 hour9.value = 9
 $(hour9).children('textarea').text(localStorage.getItem('9'));
@@ -60,67 +47,35 @@ let hour17 = document.getElementById('hour-17');
 hour17.value = 17
 $(hour17).children('textarea').text(localStorage.getItem('17'));
 
+
+//put the hour slots into an array
 let schedule = [hour9, hour10, hour11, hour12, hour13, hour14, hour15, hour16, hour17]
-console.log(schedule)
-  
-  let main = $('.container-lg');
 
-  let saveBtn = main.children('div').children('button');
+//set DOM traversal to select the buttons of each section
+let main = $('.container-lg');
 
-  let textEnter = $('div').children('textarea');
+let saveBtn = main.children('div').children('button');
 
-  console.log(saveBtn);
+//listener event to save user entered text
 
-  saveBtn.on('click', function(){
-
-    let hourSect = $(this).parent();
-    let field = hourSect.children('textarea');
-
-    console.log(hourSect)
-    console.log($(hourSect).val())
-    console.log(field);
-    console.log('This is working');
-    console.log(field.val());
-
-
-    localStorage.setItem(hourSect.val(), field.val());
-
-
-
-
+saveBtn.on('click', function(){
+  //DOM traversal to select the corresponding text area
+  let hourSect = $(this).parent();
+  let field = hourSect.children('textarea');
+  //saves the entry to local storage
+  localStorage.setItem(hourSect.val(), field.val());
   })
 
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
+//for loop to assign class to each field based on dayjs
+for (i=0; i<schedule.length; i++) {
 
-  
-
-
-
-
-
-
-
-
-  for (i=0; i<schedule.length; i++) {
-
-    if (schedule[i].value === thisHour) {
-      $(schedule[i]).addClass('present');
-      console.log('this is' + schedule[i])
-    } else if (schedule[i].value < thisHour) {
-      $(schedule[i]).addClass('past');
-    } else {
-      $(schedule[i]).addClass('future');
-    }
+  if (schedule[i].value === thisHour) {
+    $(schedule[i]).addClass('present');
+  } else if (schedule[i].value < thisHour) {
+    $(schedule[i]).addClass('past');
+  } else {
+    $(schedule[i]).addClass('future');
   }
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
+}
+
 }))
